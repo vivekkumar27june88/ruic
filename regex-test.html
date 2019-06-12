@@ -1,0 +1,106 @@
+<html>
+<h1>Regular Expression JS</h1>
+
+<style>
+    #tier-table {
+        font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    #tier-table td,
+    #tier-table th {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    #tier-table tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    #tier-table tr:hover {
+        background-color: #ddd;
+    }
+
+    #tier-table th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    #input {
+        min-height: 240px;
+        width: 90%;
+        margin: 30px auto;
+        display: block;
+        padding: 20px;
+        font-size: 16px;
+        line-height: 24px;
+        user-select: none;
+    }
+</style>
+
+<textarea id="input"></textarea>
+<div id="output"></div>
+
+<script>
+    function test() {
+        const text = `Preferred  Tier 1: Preferred Generic  (30-day),  (90-day) <br/>Preferred  Tier 2: Generic  (30-day),  (90-day) <br/>Preferred  Tier 3: Preferred Brand  (30-day),  (90-day) <br/>Preferred  Tier 4: Non-Preferred Drug  (30-day),  (90-day) <br/>Preferred  Tier 5: Specialty Tier  (30-day),  (90-day) <br/>Standard Tier 1: Preferred Generic $3 (30-day), $9 (90-day) <br/>Standard Tier 2: Generic $10 (30-day), $30 (90-day) <br/>Standard Tier 3: Preferred Brand $45 (30-day), $135 (90-day) <br/>Standard Tier 4: Non-Preferred Drug $95 (30-day), $285 (90-day) <br/>Standard Tier 5: Specialty Tier 33% (30-day), 33% (90-day)`
+
+        const re = /([\w \d]+):\s*([\w -]*\s{1,1})\s*([%$\d]+)*\s*\((\d*-day)\),\s*([%$\d]*)*\s*\((\d*-day)\)/gm
+
+        const m = text.match(re);
+        var data = [];
+
+        while (res = re.exec(text)) {
+            const r = res;
+            console.log(res);
+            const row = {
+                "tierLevel": r[1],
+                "description": r[2],
+                "_30day": r[3] || '',
+                "_90day": r[5] || ''
+            };
+            data.push(row);
+        }
+
+        let htmlContentArr = [
+            `<table id="tier-table">
+            <tr>
+                <th>Tier Level</th>
+                <th>Description</th>
+                <th>30day</th>
+                <th>90day</th>
+            </tr>`
+        ];
+
+        data.forEach(row => {
+            tableRow = `
+            <tr>
+                <td>${row.tierLevel}</td>
+                <td>${row.description}</td>
+                <td>${row._30day}</td>
+                <td>${row._90day}</td>
+            </tr>`;
+
+            htmlContentArr.push(tableRow);
+        });
+
+        htmlContentArr.push('</table>');
+
+        const htmlTableStr = htmlContentArr.join('');
+
+        const inputEl = document.getElementById("input");
+        const outputEl = document.getElementById("output");
+
+        inputEl.innerHTML = text;
+        outputEl.innerHTML = htmlTableStr;
+    }
+
+    test();
+</script>
+
+</html>
